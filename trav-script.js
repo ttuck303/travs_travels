@@ -28,8 +28,8 @@ function getRandomImage(){
   return "DSC0" + (Math.floor(Math.random()*4+1871)) + ".JPG";
 }
 
-var City = function City(name, latitude, longitude, country){
-  this.name = name;
+var City = function City(city, latitude, longitude, country){
+  this.city = city;
   this.latitude = latitude;
   this.longitude = longitude;
   this.country = country;
@@ -41,18 +41,29 @@ destinations.push( new City("London", 51.508601, -0.129808, "UK") );
 destinations.push( new City("Dubrovnik", 42.650661, 18.094424, "HR") );
 
 function drawMarkers(map){
-  //console.log("drawing markers");
+
   for(var i in destinations){
-    //console.log(destinations[i]);
-    //console.log("Lat: "+destinations[i]["latitude"]+", Long: "+destinations[i]["longitude"]);
     var newMarker = new google.maps.Marker({
       position: {
         lat: Number(destinations[i]['latitude']),
         lng: Number(destinations[i]['longitude'])
       }
     });
+
     newMarker.setMap(map);
+
+    var newInfoWindow = new google.maps.InfoWindow({
+      content: destinations[i]["city"]
+    });
+
+    createMarkerListener(map, newMarker, newInfoWindow);
+    
   }
-  //console.log("markers complete");
+}
+
+function createMarkerListener(map, marker, infoWindow){
+   google.maps.event.addListener(marker, 'click', function(){
+      infoWindow.open(map, marker);
+  });
 }
 
